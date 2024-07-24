@@ -1,10 +1,12 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { removeFavorite } from '../redux/slices/usersSlice';
+import { View, Text, StyleSheet } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFavorite } from "../redux/slices/usersSlice";
+import ListItems from "../components/ListItems";
+import SearchBar from "../components/SearchBar";
+import CustomButton from "../components/CustomButton";
 
-const FavoriteScreen = ({ navigation }) => {
-  const favoriteUsers = useSelector(state => state.users.favoriteUsers);
+const FavoriteScreen = () => {
+  const favoriteUsers = useSelector((state) => state.users.favoriteUsers);
   const dispatch = useDispatch();
 
   const handleRemoveFavorite = (userId) => {
@@ -13,24 +15,27 @@ const FavoriteScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      <View style={styles.searchContainer}>
+        <SearchBar
+          placeholder="User Id"
+          //  onChangeText={setSearch}
+          //  value={search}
+        />
+        <CustomButton title="Search" />
+      </View>
+
+      <Text style={styles.titleText}> FAVOURITE USERS</Text>
+
+      <ListItems
+        text="REMOVE"
         data={favoriteUsers}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.userItem}>
-            <Text>{item.first_name} {item.last_name}</Text>
-            <TouchableOpacity onPress={() => handleRemoveFavorite(item.id)}>
-              <Text style={styles.removeButton}>Remove</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        handleAction={handleRemoveFavorite}
       />
     </View>
-  )
-}
+  );
+};
 
-export default FavoriteScreen
-
+export default FavoriteScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -40,11 +45,22 @@ const styles = StyleSheet.create({
   userItem: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    borderBottomColor: "#ccc",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   removeButton: {
-    color: 'red',
+    color: "red",
+  },
+  titleText: {
+    fontSize: 18,
+    margin: 15,
+    fontWeight: "500",
+  },
+  searchContainer: {
+    backgroundColor: "#ffffff",
+    flexDirection: "row",
+    height: "10%",
+    paddingHorizontal: "2%",
   },
 });
